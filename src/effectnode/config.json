@@ -1,0 +1,9 @@
+{
+  "studio": {
+    "server": "http://localhost:1234",
+    "port": 1234
+  },
+  "client": {
+    "origin": "http://localhost:3001"
+  }
+}

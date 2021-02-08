@@ -653,10 +653,10 @@ export class NoodleSimulation {
     ));
 
     if (this.tools && this.tools.onUserData) {
-      // this.tools.onUserData(({ tailColor, ballColor }) => {
-      //   ballMat.color = new Color(ballColor);
-      //   lineMat.color = new Color(tailColor);
-      // });
+      this.tools.onUserData(({ opacity }) => {
+        ballMat.opacity = Math.abs(opacity / 100.0);
+        lineMat.opacity = Math.abs(opacity / 100.0);
+      });
     }
 
     let tail = new Mesh(geo.lineGeo, lineMat);

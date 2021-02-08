@@ -5,8 +5,8 @@
 			"isProtected": true,
 			"isUserBoxes": true,
 			"_id": "AAA",
-			"x": 106.94290161132812,
-			"y": 146.24990844726562,
+			"x": 156.32557678222656,
+			"y": 122.26937866210938,
 			"displayName": "app",
 			"moduleName": "AAA__ID__app",
 			"fileName": "AAA__ID__app.js",
@@ -35,8 +35,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_20373994",
-			"x": 589.1880950927734,
-			"y": 334.0869445800781,
+			"x": 419.3489532470703,
+			"y": 291.69012451171875,
 			"displayName": "mesh",
 			"moduleName": "mesh__ID___20373994",
 			"fileName": "mesh__ID___20373994.js",
@@ -91,8 +91,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_55713472",
-			"x": 525.0464324951172,
-			"y": 593.8515625,
+			"x": 326.1407928466797,
+			"y": 527.6925659179688,
 			"displayName": "geo",
 			"moduleName": "geo__ID___55713472",
 			"fileName": "geo__ID___55713472.js",
@@ -125,8 +125,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_34583859",
-			"x": 677.2178649902344,
-			"y": 589.21044921875,
+			"x": 497.76123046875,
+			"y": 525.8507690429688,
 			"displayName": "mat",
 			"moduleName": "mat__ID___34583859",
 			"fileName": "mat__ID___34583859.js",
@@ -160,8 +160,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_63164145",
-			"x": 286.03501892089844,
-			"y": 490.1340026855469,
+			"x": 530.0851898193359,
+			"y": 684.2432556152344,
 			"displayName": "points",
 			"moduleName": "points__ID___63164145",
 			"fileName": "points__ID___63164145.js",
@@ -200,8 +200,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_24220078",
-			"x": 298.6302032470703,
-			"y": 322.0181579589844,
+			"x": 218.46307373046875,
+			"y": 306.0509948730469,
 			"displayName": "simulation",
 			"moduleName": "simulation__ID___24220078",
 			"fileName": "simulation__ID___24220078.js",
@@ -211,7 +211,13 @@
 					"_id": "_77752851",
 					"name": "colorSeed",
 					"type": "number",
-					"value": -6.7
+					"value": -98
+				},
+				{
+					"_id": "_46724099",
+					"name": "opacity",
+					"type": "number",
+					"value": 53
 				}
 			],
 			"inputs": [
@@ -234,8 +240,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_7188763",
-			"x": 72.01332092285156,
-			"y": 359.0910339355469,
+			"x": 33.43408203125,
+			"y": 287.5837707519531,
 			"displayName": "effects",
 			"moduleName": "effects__ID___7188763",
 			"fileName": "effects__ID___7188763.js",
@@ -245,19 +251,19 @@
 					"_id": "_50273784",
 					"name": "strength",
 					"type": "number",
-					"value": 30.7
+					"value": 51.2
 				},
 				{
 					"_id": "_90923198",
 					"name": "radius",
 					"type": "number",
-					"value": -28.4
+					"value": 16.8
 				},
 				{
 					"_id": "_57174349",
 					"name": "threshold",
 					"type": "number",
-					"value": 24
+					"value": 2.3
 				}
 			],
 			"inputs": [
@@ -284,12 +290,6 @@
 			"inputSlotID": "_94974077"
 		},
 		{
-			"_id": "_35032810",
-			"outputBoxID": "AAA",
-			"inputBoxID": "_24220078",
-			"inputSlotID": "_81373655"
-		},
-		{
 			"_id": "_73085531",
 			"outputBoxID": "AAA",
 			"inputBoxID": "_20373994",
@@ -302,10 +302,16 @@
 			"inputSlotID": "_80198685"
 		},
 		{
-			"_id": "_72035279",
+			"_id": "_18798284",
 			"outputBoxID": "AAA",
 			"inputBoxID": "_7188763",
 			"inputSlotID": "_70577619"
+		},
+		{
+			"_id": "_14038947",
+			"outputBoxID": "AAA",
+			"inputBoxID": "_24220078",
+			"inputSlotID": "_81373655"
 		}
 	]
 }

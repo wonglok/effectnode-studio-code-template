@@ -14,11 +14,12 @@ import {
   Object3D,
   Vector2,
   Vector3,
+  DynamicDrawUsage,
 } from "three";
 import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer";
 import { Geometry } from "three/examples/jsm/deprecated/Geometry.js";
 import { CurlNoise, CommonFunc, FBMNoise } from "./glsl";
-import niceColors from "nice-color-palettes";
+import niceColors from "nice-color-palettes/1000.json";
 
 export class NoodleGeometry {
   constructor({
@@ -28,6 +29,7 @@ export class NoodleGeometry {
     openEnded = true,
     ballSize = 1.0,
     WIDTH = 64,
+    tools = false,
   }) {
     this.WIDTH = WIDTH;
     const radius = 1;
@@ -122,31 +124,6 @@ export class NoodleGeometry {
       new InstancedBufferAttribute(new Float32Array(offsets.slice()), 3)
     );
 
-    //----
-    let idx = Math.floor(niceColors.length * Math.random());
-    let colors = niceColors[idx];
-    console.log(idx);
-    // 8
-    // 39
-    // 176
-    // 50
-    // 84
-    //
-
-    let colorArray = [];
-    let RGBColor = new Color();
-
-    for (let idx = 0; idx < count; idx++) {
-      let colorCode = colors[Math.floor(Math.random() * colors.length)];
-      RGBColor.set(colorCode);
-      colorArray.push(RGBColor.r, RGBColor.g, RGBColor.b);
-    }
-
-    lineGeo.setAttribute(
-      "myColor",
-      new InstancedBufferAttribute(new Float32Array(colorArray), 3)
-    );
-
     let lookupData = [];
     for (let y = 0; y < this.WIDTH; y++) {
       for (let x = 0; x < this.WIDTH; x++) {
@@ -174,10 +151,71 @@ export class NoodleGeometry {
       new InstancedBufferAttribute(new Float32Array(lookupData.slice()), 4)
     );
 
-    ballGeo.setAttribute(
-      "color",
-      new InstancedBufferAttribute(new Float32Array(colorArray), 3)
+    // ----- Color Section
+
+    //----
+    // let idx = Math.floor(niceColors.length * Math.random());
+    // console.log(idx);
+    // 8
+    // 39
+    // 176
+    // 50
+    // 84
+    //
+
+    let colorArray = [];
+    let RGBColor = new Color();
+    let colorSet =
+      niceColors[
+        Math.floor((niceColors.length - 1) * Math.abs(-6.7 / 100.0)) %
+          niceColors.length
+      ] || niceColors[5];
+
+    for (let idx = 0; idx < count; idx++) {
+      let colorCode = colorSet[Math.floor(Math.random() * colorSet.length)];
+      RGBColor.set(colorCode);
+      colorArray.push(RGBColor.r, RGBColor.g, RGBColor.b);
+    }
+
+    let colorAttr = new InstancedBufferAttribute(
+      new Float32Array(colorArray),
+      3
     );
+
+    colorAttr.setUsage(DynamicDrawUsage);
+
+    lineGeo.setAttribute("myColor", colorAttr);
+    ballGeo.setAttribute("color", colorAttr);
+
+    if (tools && tools.onUserData) {
+      let lastSeed = false;
+      let tt = 100;
+      tools.onUserData(({ colorSeed }) => {
+        clearTimeout(tt);
+        tt = setTimeout(() => {
+          if (lastSeed !== colorSeed && colorSeed) {
+            let colorSet =
+              niceColors[
+                Math.floor(
+                  (niceColors.length - 1) * Math.abs(colorSeed / 100.0)
+                ) % niceColors.length
+              ] || niceColors[5];
+
+            for (let idx = 0; idx < count; idx++) {
+              let colorCode =
+                colorSet[Math.floor(Math.random() * colorSet.length)];
+              RGBColor.set(colorCode);
+              colorAttr.setXYZ(idx, RGBColor.r, RGBColor.g, RGBColor.b);
+              // colorArray.push();
+            }
+
+            colorAttr.needsUpdate = true;
+
+            lastSeed = colorSeed;
+          }
+        }, 50);
+      });
+    }
 
     return {
       lineGeo,
@@ -584,6 +622,7 @@ export class NoodleSimulation {
       openEnded: true,
       ballSize,
       WIDTH: this.WIDTH,
+      tools: this.tools,
     });
 
     let lineMat = (this.lineMat = new NoodleLineMaterial(

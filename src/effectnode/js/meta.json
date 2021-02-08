@@ -200,8 +200,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_24220078",
-			"x": 326.1988067626953,
-			"y": 326.99639892578125,
+			"x": 322.39988708496094,
+			"y": 333.1359558105469,
 			"displayName": "simulation",
 			"moduleName": "simulation__ID___24220078",
 			"fileName": "simulation__ID___24220078.js",
@@ -218,6 +218,12 @@
 					"name": "ballColor",
 					"type": "color",
 					"value": "#515976"
+				},
+				{
+					"_id": "_77752851",
+					"name": "colorSeed",
+					"type": "number",
+					"value": -35.2
 				}
 			],
 			"inputs": [

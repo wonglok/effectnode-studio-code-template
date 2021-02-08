@@ -200,30 +200,18 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_24220078",
-			"x": 322.39988708496094,
-			"y": 333.1359558105469,
+			"x": 298.6302032470703,
+			"y": 322.0181579589844,
 			"displayName": "simulation",
 			"moduleName": "simulation__ID___24220078",
 			"fileName": "simulation__ID___24220078.js",
 			"slug": "simulation",
 			"userData": [
 				{
-					"_id": "_21860370",
-					"name": "tailColor",
-					"type": "color",
-					"value": "#5900ff"
-				},
-				{
-					"_id": "_96472919",
-					"name": "ballColor",
-					"type": "color",
-					"value": "#515976"
-				},
-				{
 					"_id": "_77752851",
 					"name": "colorSeed",
 					"type": "number",
-					"value": -35.2
+					"value": -6.7
 				}
 			],
 			"inputs": [

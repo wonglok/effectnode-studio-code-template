@@ -200,8 +200,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_24220078",
-			"x": 178.15638732910156,
-			"y": 422.4015197753906,
+			"x": 215.2018280029297,
+			"y": 324.7140808105469,
 			"displayName": "simulation",
 			"moduleName": "simulation__ID___24220078",
 			"fileName": "simulation__ID___24220078.js",
@@ -211,13 +211,13 @@
 					"_id": "_77752851",
 					"name": "colorSeed",
 					"type": "number",
-					"value": -55.1
+					"value": -99.1
 				},
 				{
 					"_id": "_46724099",
 					"name": "opacity",
 					"type": "number",
-					"value": 100
+					"value": 39.3
 				}
 			],
 			"inputs": [
@@ -240,8 +240,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_7188763",
-			"x": 49.081298828125,
-			"y": 282.1319580078125,
+			"x": 51.036468505859375,
+			"y": 504.8348083496094,
 			"displayName": "effects",
 			"moduleName": "effects__ID___7188763",
 			"fileName": "effects__ID___7188763.js",
@@ -308,7 +308,7 @@
 			"inputSlotID": "_39203022"
 		},
 		{
-			"_id": "_81539947",
+			"_id": "_61862640",
 			"outputBoxID": "AAA",
 			"inputBoxID": "_7188763",
 			"inputSlotID": "_70577619"

@@ -538,7 +538,7 @@ export class NoodleSimulation {
 
     this.SPACE_BBOUND = 10;
     this.SPAC_BOUND_HALF = this.SPACE_BBOUND / 2;
-    this.WIDTH = 20;
+    this.WIDTH = 24;
     this.INSTANCE_COUNT = this.WIDTH * this.WIDTH;
     this.renderer = renderer;
     this.object3d = new Object3D();
@@ -548,7 +548,7 @@ export class NoodleSimulation {
   }
 
   prepareObjectShader() {
-    let subdivisions = 80;
+    let subdivisions = 70;
     let count = this.INSTANCE_COUNT;
     let numSides = 5;
     let thickness = 0.5;

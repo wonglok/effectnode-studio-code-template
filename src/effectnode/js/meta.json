@@ -211,7 +211,7 @@
 					"_id": "_77752851",
 					"name": "colorSeed",
 					"type": "number",
-					"value": -0.9
+					"value": -55.1
 				},
 				{
 					"_id": "_46724099",
@@ -251,19 +251,19 @@
 					"_id": "_50273784",
 					"name": "strength",
 					"type": "number",
-					"value": 58.7
+					"value": 100
 				},
 				{
 					"_id": "_90923198",
 					"name": "radius",
 					"type": "number",
-					"value": 30.9
+					"value": 36.7
 				},
 				{
 					"_id": "_57174349",
 					"name": "threshold",
 					"type": "number",
-					"value": 5.1
+					"value": 7.9
 				}
 			],
 			"inputs": [
@@ -290,12 +290,6 @@
 			"inputSlotID": "_94974077"
 		},
 		{
-			"_id": "_73085531",
-			"outputBoxID": "AAA",
-			"inputBoxID": "_20373994",
-			"inputSlotID": "_39203022"
-		},
-		{
 			"_id": "_5855032",
 			"outputBoxID": "_20373994",
 			"inputBoxID": "_34583859",
@@ -308,7 +302,13 @@
 			"inputSlotID": "_81373655"
 		},
 		{
-			"_id": "_6783830",
+			"_id": "_18112210",
+			"outputBoxID": "AAA",
+			"inputBoxID": "_20373994",
+			"inputSlotID": "_39203022"
+		},
+		{
+			"_id": "_81539947",
 			"outputBoxID": "AAA",
 			"inputBoxID": "_7188763",
 			"inputSlotID": "_70577619"

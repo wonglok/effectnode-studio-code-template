@@ -4,7 +4,7 @@ import {
   Clock,
   Color,
   CylinderBufferGeometry,
-  DoubleSide,
+  // DoubleSide,
   HalfFloatType,
   IcosahedronBufferGeometry,
   InstancedBufferAttribute,
@@ -15,6 +15,7 @@ import {
   Vector2,
   Vector3,
   DynamicDrawUsage,
+  FrontSide,
 } from "three";
 import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer";
 import { Geometry } from "three/examples/jsm/deprecated/Geometry.js";
@@ -167,8 +168,9 @@ export class NoodleGeometry {
     let RGBColor = new Color();
     let colorSet =
       niceColors[
-        Math.floor((niceColors.length - 1) * Math.abs(-6.7 / 100.0)) %
-          niceColors.length
+        Math.floor(
+          ((niceColors.length - 1) * Math.abs(-6.7 / 100.0)) % niceColors.length
+        )
       ] || niceColors[5];
 
     for (let idx = 0; idx < count; idx++) {
@@ -177,15 +179,20 @@ export class NoodleGeometry {
       colorArray.push(RGBColor.r, RGBColor.g, RGBColor.b);
     }
 
-    let colorAttr = new InstancedBufferAttribute(
+    let colorAttrLineGeo = new InstancedBufferAttribute(
       new Float32Array(colorArray),
       3
     );
+    colorAttrLineGeo.setUsage(DynamicDrawUsage);
 
-    colorAttr.setUsage(DynamicDrawUsage);
+    let colorAttrBallGeo = new InstancedBufferAttribute(
+      new Float32Array(colorArray),
+      3
+    );
+    colorAttrBallGeo.setUsage(DynamicDrawUsage);
 
-    lineGeo.setAttribute("myColor", colorAttr);
-    ballGeo.setAttribute("color", colorAttr);
+    lineGeo.setAttribute("myColor", colorAttrLineGeo);
+    ballGeo.setAttribute("myColor", colorAttrBallGeo);
 
     if (tools && tools.onUserData) {
       let lastSeed = false;
@@ -205,11 +212,12 @@ export class NoodleGeometry {
               let colorCode =
                 colorSet[Math.floor(Math.random() * colorSet.length)];
               RGBColor.set(colorCode);
-              colorAttr.setXYZ(idx, RGBColor.r, RGBColor.g, RGBColor.b);
-              // colorArray.push();
+              colorAttrLineGeo.setXYZ(idx, RGBColor.r, RGBColor.g, RGBColor.b);
+              colorAttrBallGeo.setXYZ(idx, RGBColor.r, RGBColor.g, RGBColor.b);
             }
 
-            colorAttr.needsUpdate = true;
+            colorAttrLineGeo.needsUpdate = true;
+            colorAttrBallGeo.needsUpdate = true;
 
             lastSeed = colorSeed;
           }
@@ -311,7 +319,7 @@ export class CommonShader {
 export class NoodleBallMaterial {
   constructor(args, { WIDTH }) {
     this.WIDTH = WIDTH;
-    this.material = new MeshStandardMaterial(args);
+    this.material = args;
     this.setup();
     return this.material;
   }
@@ -340,6 +348,9 @@ export class NoodleBallMaterial {
 attribute vec3 offsets;
 uniform float time;
 
+attribute vec3 myColor;
+varying vec3 myColorV;
+
 ${CommonShader.UtilFunctions()}
       `
       );
@@ -353,6 +364,26 @@ ${CommonShader.UtilFunctions()}
         ${CommonShader.CoordProcedure()}
 
         vec3 transformed = position + coord;
+        myColorV = myColor;
+        `
+      );
+
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "#include <color_pars_fragment>",
+        /* glsl */ `#include <color_pars_fragment>
+
+        varying vec3 myColorV;
+        `
+      );
+
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "gl_FragColor = vec4( outgoingLight, diffuseColor.a );",
+        /* glsl */ `
+        outgoingLight = myColorV;
+
+        gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+        // diffuseColor.rgb *= myColorV;
         `
       );
 
@@ -462,7 +493,7 @@ void makeGeo (out vec3 transformed, out vec3 objectNormal) {
 
         makeGeo(transformed, transformedNormal);
 
-        transformedNormal = vec3(normal);
+        // transformedNormal = vec3(normal);
 
         myColorV = myColor;
         `
@@ -473,19 +504,21 @@ void makeGeo (out vec3 transformed, out vec3 objectNormal) {
         /* glsl */ `#include <color_pars_fragment>
 
         varying vec3 myColorV;
+        `
+      );
+
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "gl_FragColor = vec4( outgoingLight, diffuseColor.a );",
+        /* glsl */ `
+        outgoingLight = myColorV;
+
+        gl_FragColor = vec4( outgoingLight, diffuseColor.a );
 
         // diffuseColor.rgb *= myColorV;
         `
       );
 
-      shader.fragmentShader = shader.fragmentShader.replace(
-        "#include <color_fragment>",
-        /* glsl */ `#include <color_fragment>
-
-        diffuseColor.rgb *= myColorV;
-        `
-      );
-
+      // console.log(shader.fragmentShader);
       //
 
       this.material.userData.shader = shader;
@@ -505,13 +538,85 @@ export class NoodleSimulation {
 
     this.SPACE_BBOUND = 10;
     this.SPAC_BOUND_HALF = this.SPACE_BBOUND / 2;
-    this.WIDTH = 32;
+    this.WIDTH = 20;
     this.INSTANCE_COUNT = this.WIDTH * this.WIDTH;
     this.renderer = renderer;
     this.object3d = new Object3D();
 
     this.initComputeRenderer();
     this.prepareObjectShader();
+  }
+
+  prepareObjectShader() {
+    let subdivisions = 80;
+    let count = this.INSTANCE_COUNT;
+    let numSides = 5;
+    let thickness = 0.5;
+    let ballSize = 1.33;
+
+    let geo = new NoodleGeometry({
+      count,
+      numSides,
+      subdivisions,
+      openEnded: true,
+      ballSize,
+      WIDTH: this.WIDTH,
+      tools: this.tools,
+    });
+
+    let lineMat = (this.lineMat = new NoodleLineMaterial(
+      new MeshStandardMaterial({
+        // color: new Color("#ffffff"),
+        vertexColors: true,
+        side: FrontSide,
+        transparent: true,
+        metalness: 0.5,
+        roughness: 1.0,
+        opacity: 0.5,
+      }),
+      { subdivisions, thickness, WIDTH: this.WIDTH }
+    ));
+
+    let ballMat = (this.ballMat = new NoodleBallMaterial(
+      new MeshStandardMaterial({
+        // color: new Color("#ffffff"),
+        vertexColors: true,
+        side: FrontSide,
+        transparent: true,
+        metalness: 0.7,
+        roughness: 0.32,
+        opacity: 1.0,
+      }),
+      {
+        WIDTH: this.WIDTH,
+      }
+    ));
+
+    if (this.tools && this.tools.onUserData) {
+      this.tools.onUserData(({ opacity }) => {
+        ballMat.opacity = Math.abs(opacity / 100.0);
+        lineMat.opacity = Math.abs(opacity / 100.0);
+      });
+    }
+
+    let tail = new Mesh(geo.lineGeo, lineMat);
+    tail.scale.set(30, 30, 30);
+    tail.frustumCulled = false;
+
+    let ball = new Mesh(geo.ballGeo, ballMat);
+    ball.scale.set(30, 30, 30);
+    ball.frustumCulled = false;
+
+    this.object3d = new Object3D();
+    this.object3d.add(tail);
+    this.object3d.add(ball);
+
+    // this.object3d.add(
+    //   new Mesh(
+    //     new BoxBufferGeometry(20, 20, 20),
+    //     new MeshBasicMaterial({ color: 0xff0000 })
+    //   )
+    // );
   }
 
   fillVelocityTexture(texture) {
@@ -554,6 +659,7 @@ export class NoodleSimulation {
     // if (this.isSafari()) {
     //   this.gpuCompute.setDataType(HalfFloatType);
     // }
+
     this.gpuCompute.setDataType(HalfFloatType);
 
     const dtPosition = this.gpuCompute.createTexture();
@@ -607,77 +713,6 @@ export class NoodleSimulation {
     if (error !== null) {
       console.error(error);
     }
-  }
-
-  prepareObjectShader() {
-    let subdivisions = 150;
-    let count = this.INSTANCE_COUNT;
-    let numSides = 3;
-    let thickness = 0.7;
-    let ballSize = 1.0;
-
-    let geo = new NoodleGeometry({
-      count,
-      numSides,
-      subdivisions,
-      openEnded: true,
-      ballSize,
-      WIDTH: this.WIDTH,
-      tools: this.tools,
-    });
-
-    let lineMat = (this.lineMat = new NoodleLineMaterial(
-      new MeshStandardMaterial({
-        // color: new Color("#ffffff"),
-        side: DoubleSide,
-        transparent: true,
-        metalness: 0.0,
-        roughness: 1.0,
-        opacity: 0.5,
-      }),
-      { subdivisions, thickness, WIDTH: this.WIDTH }
-    ));
-
-    let ballMat = (this.ballMat = new NoodleBallMaterial(
-      new MeshStandardMaterial({
-        // color: new Color("#ffffff"),
-        side: DoubleSide,
-        transparent: true,
-        metalness: 0.7,
-        roughness: 0.32,
-        opacity: 1.0,
-        vertexColors: true,
-      }),
-      {
-        WIDTH: this.WIDTH,
-      }
-    ));
-
-    if (this.tools && this.tools.onUserData) {
-      this.tools.onUserData(({ opacity }) => {
-        ballMat.opacity = Math.abs(opacity / 100.0);
-        lineMat.opacity = Math.abs(opacity / 100.0);
-      });
-    }
-
-    let tail = new Mesh(geo.lineGeo, lineMat);
-    tail.scale.set(30, 30, 30);
-    tail.frustumCulled = false;
-
-    let ball = new Mesh(geo.ballGeo, ballMat);
-    ball.scale.set(30, 30, 30);
-    ball.frustumCulled = false;
-
-    this.object3d = new Object3D();
-    this.object3d.add(tail);
-    this.object3d.add(ball);
-
-    // this.object3d.add(
-    //   new Mesh(
-    //     new BoxBufferGeometry(20, 20, 20),
-    //     new MeshBasicMaterial({ color: 0xff0000 })
-    //   )
-    // );
   }
 
   render({ asepct, mouse, viewport }) {

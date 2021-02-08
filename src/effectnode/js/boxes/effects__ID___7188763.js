@@ -19,7 +19,9 @@ extend({
 export default function Effects({ tools }) {
   const composer = useRef();
   const { scene, gl, size, camera } = useThree();
-  const dpi = window.devicePixelRatio || 1.0;
+  let dpi = window.devicePixelRatio || 1.0;
+  dpi = dpi > 2 ? 2 : 1.5;
+
   const unreal = useRef();
   useEffect(
     () => void composer.current.setSize(size.width * dpi, size.height * dpi),

@@ -5,8 +5,8 @@
 			"isProtected": true,
 			"isUserBoxes": true,
 			"_id": "AAA",
-			"x": 156.32557678222656,
-			"y": 122.26937866210938,
+			"x": 199.47047424316406,
+			"y": 144.4997100830078,
 			"displayName": "app",
 			"moduleName": "AAA__ID__app",
 			"fileName": "AAA__ID__app.js",
@@ -26,7 +26,7 @@
 					"_id": "_23222452",
 					"name": "bgColor",
 					"type": "color",
-					"value": "#1a1414"
+					"value": "#000000"
 				}
 			]
 		},
@@ -211,13 +211,13 @@
 					"_id": "_77752851",
 					"name": "colorSeed",
 					"type": "number",
-					"value": -98
+					"value": -0.9
 				},
 				{
 					"_id": "_46724099",
 					"name": "opacity",
 					"type": "number",
-					"value": 53
+					"value": 100
 				}
 			],
 			"inputs": [
@@ -240,8 +240,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_7188763",
-			"x": 49.96336364746094,
-			"y": 288.1554260253906,
+			"x": 49.081298828125,
+			"y": 282.1319580078125,
 			"displayName": "effects",
 			"moduleName": "effects__ID___7188763",
 			"fileName": "effects__ID___7188763.js",
@@ -251,19 +251,19 @@
 					"_id": "_50273784",
 					"name": "strength",
 					"type": "number",
-					"value": 51.2
+					"value": 58.7
 				},
 				{
 					"_id": "_90923198",
 					"name": "radius",
 					"type": "number",
-					"value": 16.8
+					"value": 30.9
 				},
 				{
 					"_id": "_57174349",
 					"name": "threshold",
 					"type": "number",
-					"value": 2.3
+					"value": 5.1
 				}
 			],
 			"inputs": [
@@ -302,16 +302,16 @@
 			"inputSlotID": "_80198685"
 		},
 		{
-			"_id": "_18798284",
-			"outputBoxID": "AAA",
-			"inputBoxID": "_7188763",
-			"inputSlotID": "_70577619"
-		},
-		{
 			"_id": "_14038947",
 			"outputBoxID": "AAA",
 			"inputBoxID": "_24220078",
 			"inputSlotID": "_81373655"
+		},
+		{
+			"_id": "_6783830",
+			"outputBoxID": "AAA",
+			"inputBoxID": "_7188763",
+			"inputSlotID": "_70577619"
 		}
 	]
 }

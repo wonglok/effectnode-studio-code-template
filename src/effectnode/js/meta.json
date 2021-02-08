@@ -26,7 +26,7 @@
 					"_id": "_23222452",
 					"name": "bgColor",
 					"type": "color",
-					"value": "#000000"
+					"value": "#1a1414"
 				}
 			]
 		},
@@ -91,8 +91,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_55713472",
-			"x": 326.1407928466797,
-			"y": 527.6925659179688,
+			"x": 350.88160705566406,
+			"y": 499.21417236328125,
 			"displayName": "geo",
 			"moduleName": "geo__ID___55713472",
 			"fileName": "geo__ID___55713472.js",
@@ -200,8 +200,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_24220078",
-			"x": 218.46307373046875,
-			"y": 306.0509948730469,
+			"x": 178.15638732910156,
+			"y": 422.4015197753906,
 			"displayName": "simulation",
 			"moduleName": "simulation__ID___24220078",
 			"fileName": "simulation__ID___24220078.js",
@@ -240,8 +240,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_7188763",
-			"x": 33.43408203125,
-			"y": 287.5837707519531,
+			"x": 49.96336364746094,
+			"y": 288.1554260253906,
 			"displayName": "effects",
 			"moduleName": "effects__ID___7188763",
 			"fileName": "effects__ID___7188763.js",

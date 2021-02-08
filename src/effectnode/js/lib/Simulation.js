@@ -551,9 +551,10 @@ export class NoodleSimulation {
       this.renderer
     );
 
-    if (this.isSafari()) {
-      this.gpuCompute.setDataType(HalfFloatType);
-    }
+    // if (this.isSafari()) {
+    //   this.gpuCompute.setDataType(HalfFloatType);
+    // }
+    this.gpuCompute.setDataType(HalfFloatType);
 
     const dtPosition = this.gpuCompute.createTexture();
     const dtVelocity = this.gpuCompute.createTexture();

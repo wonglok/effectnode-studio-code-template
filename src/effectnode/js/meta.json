@@ -160,8 +160,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_63164145",
-			"x": 530.0851898193359,
-			"y": 684.2432556152344,
+			"x": 501.70875549316406,
+			"y": 672.8446960449219,
 			"displayName": "points",
 			"moduleName": "points__ID___63164145",
 			"fileName": "points__ID___63164145.js",
@@ -211,13 +211,13 @@
 					"_id": "_77752851",
 					"name": "colorSeed",
 					"type": "number",
-					"value": -99.1
+					"value": 6.7
 				},
 				{
 					"_id": "_46724099",
 					"name": "opacity",
 					"type": "number",
-					"value": 39.3
+					"value": 61.1
 				}
 			],
 			"inputs": [
@@ -257,13 +257,13 @@
 					"_id": "_90923198",
 					"name": "radius",
 					"type": "number",
-					"value": 36.7
+					"value": 41.2
 				},
 				{
 					"_id": "_57174349",
 					"name": "threshold",
 					"type": "number",
-					"value": 7.9
+					"value": 15.4
 				}
 			],
 			"inputs": [
@@ -300,12 +300,6 @@
 			"outputBoxID": "AAA",
 			"inputBoxID": "_24220078",
 			"inputSlotID": "_81373655"
-		},
-		{
-			"_id": "_18112210",
-			"outputBoxID": "AAA",
-			"inputBoxID": "_20373994",
-			"inputSlotID": "_39203022"
 		},
 		{
 			"_id": "_61862640",

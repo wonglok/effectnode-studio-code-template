@@ -29,7 +29,7 @@ function Background({ onUserData }) {
   }, []);
 
   useEffect(() => {
-    let hdri = require("../../assets/grass.hdr");
+    let hdri = require("../../assets/room.hdr").default;
     const pmremGenerator = new PMREMGenerator(gl);
     pmremGenerator.compileEquirectangularShader();
     new RGBELoader()
@@ -47,6 +47,10 @@ function Background({ onUserData }) {
 
 function EffectNode({ tools, ...props }) {
   let [element, mountElement] = useState([]);
+
+  useEffect(() => {
+    mountElement([]);
+  }, []);
 
   useEffect(() => {
     tools.pulse({

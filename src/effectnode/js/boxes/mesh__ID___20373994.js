@@ -11,15 +11,15 @@ BoxScripts[box.moduleName].box({
 });
 */
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { useFrame } from "react-three-fiber";
 import { Color } from "three";
 
-function GLBox({ tools, position = [0, 0, 0] }) {
+function GLBox({ relay, position = [0, 0, 0] }) {
   const mesh = useRef();
 
-  const [hovered, setHover] = useState(false);
-  const [active, setActive] = useState(false);
+  // const [hovered, setHover] = useState(false);
+  // const [active, setActive] = useState(false);
 
   useFrame(() => {
     if (mesh.current) {
@@ -36,7 +36,7 @@ function GLBox({ tools, position = [0, 0, 0] }) {
   });
 
   useEffect(() => {
-    return tools.onUserData(({ color, rx, ry, rz }) => {
+    return relay.onUserData(({ color, rx, ry, rz }) => {
       mesh.current.rotation.rx = rx * 0.0003;
       mesh.current.rotation.ry = ry * 0.0003;
       mesh.current.rotation.rz = rz * 0.0003;
@@ -45,16 +45,14 @@ function GLBox({ tools, position = [0, 0, 0] }) {
   });
 
   useEffect(() => {
-    //
-    tools.pulse({
+    relay.pulse({
       type: "geo",
       done: (val) => {
         mesh.current.geometry = val;
       },
     });
 
-    //
-    tools.pulse({
+    relay.pulse({
       type: "mat",
       done: (val) => {
         mesh.current.material = val;
@@ -63,24 +61,17 @@ function GLBox({ tools, position = [0, 0, 0] }) {
   }, []);
 
   return (
-    <mesh
-      position={position}
-      ref={mesh}
-      scale={hovered ? (active ? [3, 3, 3] : [2, 2, 2]) : [1, 1, 1]}
-      onClick={() => setActive(!active)}
-      onPointerOver={() => setHover(true)}
-      onPointerOut={() => setHover(false)}
-    >
+    <mesh position={position} ref={mesh} scale={[3, 3, 3]}>
       <boxBufferGeometry args={[1, 1, 1]} />
       <meshStandardMaterial />
     </mesh>
   );
 }
 
-export const box = async ({ ...tools }) => {
-  tools.stream(0, ({ type, done }) => {
+export const box = async ({ ...relay }) => {
+  relay.stream(0, ({ type, done }) => {
     if (type === "mount") {
-      done(<GLBox key={"box"} tools={tools}></GLBox>);
+      done(<GLBox key={"box"} relay={relay}></GLBox>);
     }
   });
 };

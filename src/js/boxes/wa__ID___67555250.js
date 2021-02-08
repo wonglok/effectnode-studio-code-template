@@ -1,4 +1,0 @@
-/* "wa" */
-export const box = () => {
-}
-    

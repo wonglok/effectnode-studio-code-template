@@ -53,9 +53,9 @@ export const box = ({ stream, onUserData, log }) => {
 
         vec4 modColor (vec4 gfColor) {
           gfColor *= vec4(
-            1.0 - pattern(res * myUV * 3.6 + -0.23 * cos(time * 0.15)),
+            1.0 - pattern(res * myUV * 3.6 + -0.67 * cos(time * 0.15)),
             1.0 - pattern(res * myUV * 3.6 +  0.0 * cos(time * 0.15)),
-            1.0 - pattern(res * myUV * 3.6 +  0.23 * cos(time * 0.15)),
+            1.0 - pattern(res * myUV * 3.6 +  0.67 * cos(time * 0.15)),
             1.0
           );
 

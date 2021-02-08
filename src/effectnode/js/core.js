@@ -157,7 +157,7 @@ function MyCore({ mounter }) {
         console.log("Setup:  " + box.moduleName);
       }
     }
-    console.log("Setup: all Done.");
+    console.log("Setup: All Done.");
   };
 
   runAllModules();
@@ -172,7 +172,13 @@ export async function main({ mounter }) {
   if (process.env.NODE_ENV === "development") {
     let io = require("socket.io-client");
 
-    let socket = io(config.studio.server);
+    let socketServer = config.studio.appleLocal;
+
+    await fetch(socketServer, { mode: "no-cors" }).catch((e) => {
+      socketServer = config.studio.socketServer;
+    });
+
+    let socket = io(socketServer);
 
     socket.on("stream-state", ({ state }) => {
       if (window.StreamInput) {

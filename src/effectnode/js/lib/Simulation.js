@@ -18,7 +18,7 @@ import {
 import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer";
 import { Geometry } from "three/examples/jsm/deprecated/Geometry.js";
 import { CurlNoise, CommonFunc, FBMNoise } from "./glsl";
-import niceColors from "nice-color-palettes/200";
+import niceColors from "nice-color-palettes";
 
 export class NoodleGeometry {
   constructor({
@@ -125,10 +125,13 @@ export class NoodleGeometry {
     //----
     let idx = Math.floor(niceColors.length * Math.random());
     let colors = niceColors[idx];
-
+    console.log(idx);
+    // 8
     // 39
     // 176
     // 50
+    // 84
+    //
 
     let colorArray = [];
     let RGBColor = new Color();

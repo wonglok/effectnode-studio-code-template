@@ -196,32 +196,41 @@ export class NoodleGeometry {
 
     if (tools && tools.onUserData) {
       let lastSeed = false;
-      let tt = 100;
-      tools.onUserData(({ colorSeed }) => {
-        clearTimeout(tt);
-        tt = setTimeout(() => {
-          if (lastSeed !== colorSeed && colorSeed) {
-            let colorSet =
-              niceColors[
-                Math.floor(
-                  (niceColors.length - 1) * Math.abs(colorSeed / 100.0)
-                ) % niceColors.length
-              ] || niceColors[5];
+      let applySeed = ({ colorSeed }) => {
+        if (lastSeed !== colorSeed && colorSeed) {
+          let colorSet =
+            niceColors[
+              Math.floor(
+                (niceColors.length - 1) * Math.abs(colorSeed / 100.0)
+              ) % niceColors.length
+            ] || niceColors[5];
 
-            for (let idx = 0; idx < count; idx++) {
-              let colorCode =
-                colorSet[Math.floor(Math.random() * colorSet.length)];
-              RGBColor.set(colorCode);
-              colorAttrLineGeo.setXYZ(idx, RGBColor.r, RGBColor.g, RGBColor.b);
-              colorAttrBallGeo.setXYZ(idx, RGBColor.r, RGBColor.g, RGBColor.b);
-            }
-
-            colorAttrLineGeo.needsUpdate = true;
-            colorAttrBallGeo.needsUpdate = true;
-
-            lastSeed = colorSeed;
+          for (let idx = 0; idx < count; idx++) {
+            let colorCode =
+              colorSet[Math.floor(Math.random() * colorSet.length)];
+            RGBColor.set(colorCode);
+            colorAttrLineGeo.setXYZ(idx, RGBColor.r, RGBColor.g, RGBColor.b);
+            colorAttrBallGeo.setXYZ(idx, RGBColor.r, RGBColor.g, RGBColor.b);
           }
-        }, 50);
+
+          colorAttrLineGeo.needsUpdate = true;
+          colorAttrBallGeo.needsUpdate = true;
+
+          lastSeed = colorSeed;
+        }
+      };
+
+      tools.onUserData(({ colorSeed }) => {
+        if (process.env.NODE_ENV === "production") {
+          applySeed({ colorSeed });
+        }
+        if (process.env.NODE_ENV === "development") {
+          let tt = 0;
+          clearTimeout(tt);
+          tt = setTimeout(() => {
+            applySeed({ colorSeed });
+          }, 50);
+        }
       });
     }
 

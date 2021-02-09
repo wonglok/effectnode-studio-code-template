@@ -55,9 +55,9 @@ function EffectNode({ tools, ...props }) {
   useEffect(() => {
     tools.pulse({
       type: "mount",
-      done: (v) => {
+      done: (newItem) => {
         mountElement((s) => {
-          return [...s, v];
+          return [...s, newItem];
         });
       },
     });
@@ -70,8 +70,11 @@ export const box = ({ onUserData, domElement, pulse }) => {
   ReactDOM.render(
     <Canvas
       colorManagement={true}
-      pixelRatio={[1, devicePixelRatio || 3]}
+      pixelRatio={window.devicePixelRatio || 1.0}
       camera={{ position: [0, 0, -50] }}
+      onCreated={({ gl }) => {
+        gl.outputEncoding = sRGBEncoding;
+      }}
     >
       <Background onUserData={onUserData}></Background>
 

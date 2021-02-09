@@ -28,9 +28,11 @@ export class NoodleSimulation {
     this.now = 0;
     this.last = 0;
 
+    this.BLOOM_SCENE = 3;
+
     this.SPACE_BBOUND = 10;
     this.SPAC_BOUND_HALF = this.SPACE_BBOUND / 2;
-    this.WIDTH = 20;
+    this.WIDTH = 23;
     this.INSTANCE_COUNT = this.WIDTH * this.WIDTH;
     this.renderer = renderer;
     this.object3d = new Object3D();
@@ -42,8 +44,8 @@ export class NoodleSimulation {
   prepareObjectShader() {
     let subdivisions = 70;
     let count = this.INSTANCE_COUNT;
-    let numSides = 4;
-    let thickness = 0.8;
+    let numSides = 3;
+    let thickness = 1.0;
     let ballSize = 1.33;
 
     let geo = new NoodleGeometry({
@@ -85,9 +87,9 @@ export class NoodleSimulation {
     ));
 
     if (this.tools && this.tools.onUserData) {
-      this.tools.onUserData(({ opacity }) => {
-        ballMat.opacity = Math.abs(opacity / 100.0);
-        lineMat.opacity = Math.abs(opacity / 100.0);
+      this.tools.onUserData(({ opacityBall, opacityLines }) => {
+        ballMat.opacity = Math.abs(opacityBall / 100.0);
+        lineMat.opacity = Math.abs(opacityLines / 100.0);
       });
     }
 
@@ -98,6 +100,9 @@ export class NoodleSimulation {
     let ball = new Mesh(geo.ballGeo, ballMat);
     ball.scale.set(30, 30, 30);
     ball.frustumCulled = false;
+
+    tail.layers.enable(this.BLOOM_SCENE);
+    ball.layers.enable(this.BLOOM_SCENE);
 
     this.object3d = new Object3D();
     this.object3d.add(tail);
@@ -803,6 +808,8 @@ attribute vec3 offsets;
 attribute vec3 myColor;
 varying vec3 myColorV;
 
+varying float tailV;
+
 uniform float time;
 
 ${CommonShader.UtilFunctions()}
@@ -843,6 +850,8 @@ void makeGeo (out vec3 transformed, out vec3 objectNormal) {
   float thickness = 0.0025 * 0.5 * ${this.thickness.toFixed(7)};
   float t = (newPosition * 2.0) * 0.5 + 0.5;
 
+  tailV = t;
+
   vec2 volume = vec2(thickness);
   createTube(t, volume, transformed, objectNormal);
 }
@@ -867,7 +876,7 @@ void makeGeo (out vec3 transformed, out vec3 objectNormal) {
       shader.fragmentShader = shader.fragmentShader.replace(
         "#include <color_pars_fragment>",
         /* glsl */ `#include <color_pars_fragment>
-
+        varying float tailV;
         varying vec3 myColorV;
         `
       );
@@ -877,7 +886,7 @@ void makeGeo (out vec3 transformed, out vec3 objectNormal) {
         /* glsl */ `
         outgoingLight = myColorV;
 
-        gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+        gl_FragColor = vec4( outgoingLight, diffuseColor.a * (tailV * 2.0 - 1.0) * 1.5);
 
         // diffuseColor.rgb *= myColorV;
         `

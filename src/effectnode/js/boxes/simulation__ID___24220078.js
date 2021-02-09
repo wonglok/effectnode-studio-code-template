@@ -4,6 +4,7 @@ import { NoodleSimulation } from "../lib/Simulation";
 
 function FuncNode({ tools }) {
   let { gl } = useThree();
+
   let noodle = useMemo(() => {
     return new NoodleSimulation({ tools, renderer: gl });
   }, []);

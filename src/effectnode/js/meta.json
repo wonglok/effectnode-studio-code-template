@@ -26,7 +26,7 @@
 					"_id": "_23222452",
 					"name": "bgColor",
 					"type": "color",
-					"value": "#000000"
+					"value": "#121212"
 				}
 			]
 		},
@@ -211,13 +211,13 @@
 					"_id": "_77752851",
 					"name": "colorSeed",
 					"type": "number",
-					"value": -37.6
+					"value": -49.4
 				},
 				{
 					"_id": "_46724099",
 					"name": "opacity",
 					"type": "number",
-					"value": 58.4
+					"value": 66.3
 				}
 			],
 			"inputs": [
@@ -257,13 +257,13 @@
 					"_id": "_90923198",
 					"name": "radius",
 					"type": "number",
-					"value": 41.2
+					"value": 33.3
 				},
 				{
 					"_id": "_57174349",
 					"name": "threshold",
 					"type": "number",
-					"value": 15.4
+					"value": 40.6
 				}
 			],
 			"inputs": [

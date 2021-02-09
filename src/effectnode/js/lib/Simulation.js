@@ -889,7 +889,10 @@ void makeGeo (out vec3 transformed, out vec3 objectNormal) {
         "gl_FragColor = vec4( outgoingLight, diffuseColor.a );",
         /* glsl */ `
         outgoingLight = myColorV;
-        float fade = (tailV * 2.0 - 1.0) * 1.5;
+        float fade = (tailV * tailV) - 0.24;
+        if (fade < 0.0) {
+          fade = 0.0;
+        }
         gl_FragColor = vec4( outgoingLight, diffuseColor.a * fade);
 
         // diffuseColor.rgb *= myColorV;

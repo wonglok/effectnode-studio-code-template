@@ -15,7 +15,9 @@ import {
   Vector2,
   Vector3,
   DynamicDrawUsage,
-  FrontSide,
+  // FrontSide,
+  DoubleSide,
+  // AdditiveBlending,
 } from "three";
 import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer";
 import { Geometry } from "three/examples/jsm/deprecated/Geometry.js";
@@ -61,11 +63,12 @@ export class NoodleSimulation {
     let lineMat = (this.lineMat = new NoodleLineMaterial(
       new MeshStandardMaterial({
         // color: new Color("#ffffff"),
-        vertexColors: true,
-        side: FrontSide,
+        // vertexColors: true,
+        // blending: AdditiveBlending,
+        side: DoubleSide,
         transparent: true,
         metalness: 0.5,
-        roughness: 1.0,
+        roughness: 0.5,
         opacity: 0.5,
       }),
       { subdivisions, thickness, WIDTH: this.WIDTH }
@@ -74,11 +77,12 @@ export class NoodleSimulation {
     let ballMat = (this.ballMat = new NoodleBallMaterial(
       new MeshStandardMaterial({
         // color: new Color("#ffffff"),
-        vertexColors: true,
-        side: FrontSide,
+        // vertexColors: true,
+        // blending: AdditiveBlending,
+        side: DoubleSide,
         transparent: true,
-        metalness: 0.7,
-        roughness: 0.32,
+        metalness: 0.5,
+        roughness: 0.5,
         opacity: 1.0,
       }),
       {
@@ -885,8 +889,8 @@ void makeGeo (out vec3 transformed, out vec3 objectNormal) {
         "gl_FragColor = vec4( outgoingLight, diffuseColor.a );",
         /* glsl */ `
         outgoingLight = myColorV;
-
-        gl_FragColor = vec4( outgoingLight, diffuseColor.a * (tailV * 2.0 - 1.0) * 1.5);
+        float fade = (tailV * 2.0 - 1.0) * 1.5;
+        gl_FragColor = vec4( outgoingLight, diffuseColor.a * fade);
 
         // diffuseColor.rgb *= myColorV;
         `

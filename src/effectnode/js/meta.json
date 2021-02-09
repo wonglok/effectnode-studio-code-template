@@ -26,7 +26,7 @@
 					"_id": "_23222452",
 					"name": "bgColor",
 					"type": "color",
-					"value": "#121212"
+					"value": "#000000"
 				}
 			]
 		},
@@ -251,7 +251,7 @@
 					"_id": "_50273784",
 					"name": "strength",
 					"type": "number",
-					"value": 100
+					"value": 48.6
 				},
 				{
 					"_id": "_90923198",

@@ -211,13 +211,13 @@
 					"_id": "_77752851",
 					"name": "colorSeed",
 					"type": "number",
-					"value": -49.4
+					"value": 22
 				},
 				{
 					"_id": "_46724099",
 					"name": "opacity",
 					"type": "number",
-					"value": 66.3
+					"value": 100
 				}
 			],
 			"inputs": [

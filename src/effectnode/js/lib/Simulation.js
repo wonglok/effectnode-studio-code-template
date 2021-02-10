@@ -879,6 +879,7 @@ void makeGeo (out vec3 transformed, out vec3 objectNormal) {
 
       shader.fragmentShader = shader.fragmentShader.replace(
         "#include <color_pars_fragment>",
+
         /* glsl */ `#include <color_pars_fragment>
         varying float tailV;
         varying vec3 myColorV;
@@ -887,6 +888,7 @@ void makeGeo (out vec3 transformed, out vec3 objectNormal) {
 
       shader.fragmentShader = shader.fragmentShader.replace(
         "gl_FragColor = vec4( outgoingLight, diffuseColor.a );",
+
         /* glsl */ `
         outgoingLight = myColorV;
         float fade = (tailV * tailV) - 0.24;

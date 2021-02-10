@@ -125,6 +125,7 @@ function MyCore({ mounter }) {
           new CustomEvent("box-refresh" + box._id, { detail: box })
         );
       }, 1);
+      hh({ detail: box });
       window.dispatchEvent(
         new CustomEvent("request-input-stream", { detail: box })
       );
@@ -134,6 +135,7 @@ function MyCore({ mounter }) {
     };
     if (BoxGlob[box.moduleName] && BoxGlob[box.moduleName].box) {
       BoxGlob[box.moduleName].box({
+        box,
         onUserData,
         resources,
         domElement: mounter,

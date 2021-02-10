@@ -16,6 +16,8 @@ import {
 import { Geometry } from "three/examples/jsm/deprecated/Geometry.js";
 import { CurlNoise, CommonFunc, FBMNoise } from "./glsl";
 
+export const BLOOM_SCENE = 3;
+
 export class NoodleGeometry {
   constructor({
     count = 100,
@@ -24,8 +26,10 @@ export class NoodleGeometry {
     openEnded = true,
     ballSize = 1.0,
   }) {
+    //
     const radius = 1;
     const length = 1;
+
     const cylinderBufferGeo = new CylinderBufferGeometry(
       radius,
       radius,
@@ -136,11 +140,11 @@ export class NoodleGeometry {
 
 export class Noodles {
   constructor({ tools }) {
-    let subdivisions = 200;
-    let count = 850;
+    let subdivisions = 70;
+    let count = 576;
     let numSides = 3;
-    let thickness = 0.8;
-    let ballSize = 0.56;
+    let thickness = 1.2;
+    let ballSize = 0.85;
 
     let geo = new NoodleGeometry({
       count,
@@ -155,11 +159,11 @@ export class Noodles {
         color: new Color("#ffffff"),
         side: DoubleSide,
         transparent: true,
-        metalness: 0.0,
-        roughness: 1.0,
+        metalness: 0.5,
+        roughness: 0.5,
         opacity: 0.5,
       }),
-      { subdivisions, thickness }
+      { subdivisions, thickness, tools }
     );
 
     let ballMat = new NoodleBallMaterial(
@@ -167,31 +171,27 @@ export class Noodles {
         color: new Color("#ffffff"),
         side: DoubleSide,
         transparent: true,
-        metalness: 0.7,
-        roughness: 0.12,
+        metalness: 0.5,
+        roughness: 0.5,
         opacity: 0.5,
       }),
-      {}
+      { tools }
     );
 
-    if (tools && tools.onUserData) {
-      tools.onUserData(({ tailColor, ballColor }) => {
-        ballMat.color = new Color(ballColor);
-        lineMat.color = new Color(tailColor);
-      });
-    }
-
     let tail = new Mesh(geo.lineGeo, lineMat);
-    tail.scale.set(13, 13, 13);
+    tail.scale.set(50, 50, 50);
     tail.frustumCulled = false;
 
     let ball = new Mesh(geo.ballGeo, ballMat);
-    ball.scale.set(13, 13, 13);
+    ball.scale.set(50, 50, 50);
     ball.frustumCulled = false;
 
     this.object3d = new Object3D();
     this.object3d.add(tail);
     this.object3d.add(ball);
+
+    ball.layers.enable(BLOOM_SCENE);
+    tail.layers.enable(BLOOM_SCENE);
 
     // let rAF = () => {
     //   window.requestAnimationFrame(rAF);
@@ -255,7 +255,7 @@ export class CommonShader {
   `;
   }
   static CoordProcedure() {
-    return `
+    return /* glsl */ `
     // "t" is from 0 to 1
     // output "coord" variable
 
@@ -267,21 +267,30 @@ export class CommonShader {
 
     vec3 coord = catmullRom(p0, p1, p2, p3, t);
 
-    coord += 0.1 * snoiseVec3(vec3(coord * 2.0 - 1.0 + time * 0.6));
+    coord += 0.06 * snoiseVec3(vec3(coord * 2.0 - 1.0 + time * 0.6));
 
     `;
   }
 }
 
 export class NoodleBallMaterial {
-  constructor(args) {
+  constructor(args, { tools }) {
     this.material = new MeshStandardMaterial(args);
+    this.tools = tools;
     this.setup();
     return this.material;
   }
   setup() {
     let onBeforeCompile = (shader, renderer) => {
       shader.uniforms.time = { value: 0 };
+      shader.uniforms.myColor = { value: new Color("#ffffff") };
+
+      if (this.tools && this.tools.onUserData) {
+        this.tools.onUserData(({ ballColor, opacityBall }) => {
+          shader.uniforms.myColor.value = new Color(ballColor);
+          this.material.opacity = Math.abs(opacityBall / 100);
+        });
+      }
 
       let clock = new Clock();
       setInterval(() => {
@@ -317,6 +326,7 @@ ${CommonShader.UtilFunctions()}
 
         vec3 transformed = position + coord;
 
+
         `
       );
 
@@ -337,10 +347,11 @@ ${CommonShader.UtilFunctions()}
 }
 
 export class NoodleLineMaterial {
-  constructor(material, { subdivisions, thickness }) {
+  constructor(material, { subdivisions, thickness, tools }) {
     this.material = material;
     this.subdivisions = subdivisions;
     this.thickness = thickness;
+    this.tools = tools;
 
     this.setup();
 
@@ -349,6 +360,15 @@ export class NoodleLineMaterial {
   setup() {
     let onBeforeCompile = (shader, renderer) => {
       shader.uniforms.time = { value: 0 };
+      shader.uniforms.myColor = { value: new Color("#ffffff") };
+
+      if (this.tools && this.tools.onUserData) {
+        // tools.onUserData(({ tailColor, ballColor, opacityTail, opacityBall }) => {
+        this.tools.onUserData(({ tailColor, opacityTail }) => {
+          shader.uniforms.myColor.value = new Color(tailColor);
+          this.material.opacity = Math.abs(opacityTail / 100);
+        });
+      }
 
       let clock = new Clock();
       setInterval(() => {
@@ -433,6 +453,25 @@ void makeGeo (out vec3 transformed, out vec3 objectNormal) {
 
         transformedNormal = vec3(normal);
 
+        `
+      );
+
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "#include <color_pars_fragment>",
+        /* glsl */ `#include <color_pars_fragment>
+
+        uniform vec3 myColor;
+        `
+      );
+
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "gl_FragColor = vec4( outgoingLight, diffuseColor.a );",
+        /* glsl */ `
+        outgoingLight = myColor;
+
+        gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+
+        // diffuseColor.rgb *= myColorV;
         `
       );
 

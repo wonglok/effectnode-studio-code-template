@@ -12,7 +12,7 @@ BoxScripts[box.moduleName].box({
 */
 
 // import ReactDOM from "react-dom";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Canvas, useThree } from "react-three-fiber";
 import { Color, PMREMGenerator, sRGBEncoding, UnsignedByteType } from "three";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
@@ -44,23 +44,21 @@ function Background({ onUserData }) {
   return <group></group>;
 }
 
-function PulseHookElement({ relay }) {
-  const ref = useRef();
+function EffectNode({ relay, ...props }) {
+  let [element, mountElement] = useState([]);
 
   useEffect(() => {
     relay.pulse({
-      type: "add",
-      group: ref.current,
+      type: "mount",
+      done: (newItem) => {
+        mountElement((s) => {
+          return [...s, newItem];
+        });
+      },
     });
-    return () => {
-      relay.pulse({
-        type: "remove",
-        group: ref.current,
-      });
-    };
-  });
+  }, []);
 
-  return <group ref={ref}></group>;
+  return <group {...props}>{element}</group>;
 }
 
 export const box = (relay) => {
@@ -78,8 +76,9 @@ export const box = (relay) => {
               gl.outputEncoding = sRGBEncoding;
             }}
           >
+            <EffectNode relay={relay}></EffectNode>
             <Background onUserData={relay.onUserData}></Background>
-            <PulseHookElement relay={relay}></PulseHookElement>
+            {/* <ProcedralElements relay={relay}></ProcedralElements> */}
             <OrbitControls />
             <ambientLight intensity={1.0} />
           </Canvas>

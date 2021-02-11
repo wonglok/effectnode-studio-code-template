@@ -54,7 +54,7 @@ const onReadyState = (cb) => {
 function MyCore({ mounter }) {
   let onlineMap = new Map();
   let globalsMap = new Map();
-  let resources = {
+  let Resources = {
     get: (name) => {
       return new Promise((resolve) => {
         let tt = setInterval(() => {
@@ -164,7 +164,7 @@ function MyCore({ mounter }) {
       BoxGlob[box.moduleName].box({
         box,
         onUserData,
-        resources,
+        Resources,
         domElement: mounter,
         pulse,
         stream,

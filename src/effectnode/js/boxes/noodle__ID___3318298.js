@@ -28,20 +28,20 @@ export const box = async ({ ...relay }) => {
     }
   });
 
-  relay.stream(0, ({ type, group }) => {
+  relay.stream(0, ({ geometry }) => {
+    mesh.geometry = geometry;
+  });
+
+  relay.stream(1, ({ material }) => {
+    mesh.material = material;
+  });
+
+  relay.stream(2, ({ type, group }) => {
     if (type === "add") {
       group.add(mesh);
     }
     if (type === "remove") {
       group.remove(mesh);
     }
-  });
-
-  relay.stream(1, ({ geometry }) => {
-    mesh.geometry = geometry;
-  });
-
-  relay.stream(2, ({ material }) => {
-    mesh.material = material;
   });
 };

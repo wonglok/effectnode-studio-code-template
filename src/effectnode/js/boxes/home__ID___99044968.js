@@ -76,7 +76,7 @@ function EffectNode({ relay }) {
 }
 
 export const box = (relay) => {
-  console.log(relay);
+  // console.log(relay);
   relay.stream(0, ({ type, done }) => {
     if (type === "mount") {
       done({

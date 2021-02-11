@@ -123,6 +123,10 @@ export const box = ({ ...relay }) => {
 
   setup();
 
+  relay.stream(0, (spec) => {
+    console.log(spec);
+  });
+
   return {
     name: "mat",
   };

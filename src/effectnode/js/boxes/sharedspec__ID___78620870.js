@@ -1,2 +1,6 @@
 /* "shared-spec" */
-export const box = () => {};
+export const box = ({ ...relay }) => {
+  relay.pulse({
+    a: "fge",
+  });
+};

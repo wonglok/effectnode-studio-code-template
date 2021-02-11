@@ -87,6 +87,13 @@ function MyCore({ mounter }) {
         };
         window.addEventListener(input._id, onStream);
         // eventBus.on(input._id, cb);
+
+        if (module.hot) {
+          module.hot.dispose(() => {
+            window.removeEventListener(input._id, onStream);
+          });
+        }
+
         return () => {
           window.removeEventListener(input._id, onStream);
           // eventBus.off(input._id, cb);
@@ -135,6 +142,12 @@ function MyCore({ mounter }) {
       window.dispatchEvent(
         new CustomEvent("request-input-stream", { detail: box })
       );
+
+      if (module.hot) {
+        module.hot.dispose(() => {
+          window.removeEventListener("box-refresh" + box._id, hh);
+        });
+      }
       return () => {
         window.removeEventListener("box-refresh" + box._id, hh);
       };
@@ -163,13 +176,16 @@ function MyCore({ mounter }) {
     for (let box of boxes) {
       if (box) {
         setupEachBox({ box, boxes, cables });
-        console.log("Setup:  " + box.moduleName);
+        // console.log("Setup:  " + box.moduleName);
       }
     }
-    console.log("Setup: All Done.");
   };
 
+  console.log(" ------ ------ ------ ------ ------ ------ ------ ");
+  console.log(" ------   Cables and Boxes Setup finished  ------ ");
+  console.log(" ------ ------ ------ ------ ------ ------ ------ ");
   runAllModules();
+
   return;
 }
 

@@ -12,20 +12,11 @@ BoxScripts[box.moduleName].box({
 */
 
 // import ReactDOM from "react-dom";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useRef } from "react";
 import { Canvas, useThree } from "react-three-fiber";
-import {
-  Color,
-  Group,
-  PMREMGenerator,
-  sRGBEncoding,
-  UnsignedByteType,
-} from "three";
+import { Color, PMREMGenerator, sRGBEncoding, UnsignedByteType } from "three";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import { OrbitControls } from "@react-three/drei";
-// import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-
-// import { EffectComposer } from "react-postprocessing";
 
 function Background({ onUserData }) {
   let { scene, gl } = useThree();
@@ -53,26 +44,23 @@ function Background({ onUserData }) {
   return <group></group>;
 }
 
-function EffectNode({ relay }) {
-  let group = useMemo(() => {
-    return new Group();
-  }, []);
+function PulseHookElement({ relay }) {
+  const ref = useRef();
 
   useEffect(() => {
     relay.pulse({
       type: "add",
-      group: group,
+      group: ref.current,
     });
-
     return () => {
       relay.pulse({
         type: "remove",
-        group: group,
+        group: ref.current,
       });
     };
-  }, [group.uuid]);
+  });
 
-  return <primitive object={group}></primitive>;
+  return <group ref={ref}></group>;
 }
 
 export const box = (relay) => {
@@ -91,7 +79,7 @@ export const box = (relay) => {
             }}
           >
             <Background onUserData={relay.onUserData}></Background>
-            <EffectNode relay={relay}></EffectNode>
+            <PulseHookElement relay={relay}></PulseHookElement>
             <OrbitControls />
             <ambientLight intensity={1.0} />
           </Canvas>

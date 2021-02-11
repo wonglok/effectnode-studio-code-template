@@ -10,22 +10,29 @@ BoxScripts[box.moduleName].box({
   graph: lowdb,
 });
 */
-
-import { BoxBufferGeometry, Mesh, MeshStandardMaterial } from "three";
+//
+import { Mesh } from "three";
 
 export const box = async ({ ...relay }) => {
-  let mesh = new Mesh(
-    new BoxBufferGeometry(10, 10, 10),
-    new MeshStandardMaterial({ color: 0xffffff })
-  );
+  let mesh = new Mesh();
+
+  relay.clean(() => {
+    if (mesh.geometry && mesh.geometry.dispose) {
+      mesh.geometry.dispose();
+    }
+    if (mesh.material && mesh.material.dispose) {
+      mesh.material.dispose();
+    }
+    if (mesh.dispose) {
+      mesh.dispose();
+    }
+  });
 
   relay.stream(0, ({ type, group }) => {
     if (type === "add") {
-      console.log("install-mesh-to-group");
       group.add(mesh);
     }
     if (type === "remove") {
-      console.log("remove-mesh-from-group");
       group.remove(mesh);
     }
   });
@@ -33,6 +40,7 @@ export const box = async ({ ...relay }) => {
   relay.stream(1, ({ geometry }) => {
     mesh.geometry = geometry;
   });
+
   relay.stream(2, ({ material }) => {
     mesh.material = material;
   });

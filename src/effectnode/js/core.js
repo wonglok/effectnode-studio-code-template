@@ -72,6 +72,14 @@ function MyCore({ mounter }) {
   };
 
   let setupEachBox = ({ box, boxes, cables }) => {
+    let cleanStack = [];
+    let clean = (v) => cleanStack.push(v);
+    if (module.hot) {
+      module.hot.dispose(() => {
+        cleanStack.forEach((e) => e());
+      });
+    }
+
     let stream = (nameOrIDX, cb) => {
       let inputs = box.inputs;
 
@@ -163,6 +171,7 @@ function MyCore({ mounter }) {
         log: (v) => {
           console.log(JSON.stringify(v, null, 4));
         },
+        clean,
         graph: lowdb,
       });
       onlineMap.set(box._id, true);
@@ -182,7 +191,7 @@ function MyCore({ mounter }) {
   };
 
   console.log(" ------ ------ ------ ------ ------ ------ ------ ");
-  console.log(" ------   Cables and Boxes Setup finished  ------ ");
+  console.log(" ------  Cables and Boxes Setup finished.  ------ ");
   console.log(" ------ ------ ------ ------ ------ ------ ------ ");
   runAllModules();
 

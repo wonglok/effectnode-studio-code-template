@@ -57,26 +57,5 @@ function DynamicRoot({ relay }) {
 }
 
 export const box = ({ domElement, ...relay }) => {
-  // ReactDOM.render(
-  //   <Canvas
-  //     colorManagement={true}
-  //     pixelRatio={window.devicePixelRatio || 1.0}
-  //     camera={{ position: [0, 0, -50] }}
-  //     onCreated={({ gl }) => {
-  //       gl.outputEncoding = sRGBEncoding;
-  //     }}
-  //   >
-  //     <Background onUserData={onUserData}></Background>
-  //     <EffectNode
-  //       scale={[1, 1, 1]}
-  //       position={[0, 0, 0]}
-  //       tools={{ pulse }}
-  //     ></EffectNode>
-  //     <OrbitControls />
-  //     <ambientLight intensity={1.0} />
-  //   </Canvas>,
-  //   domElement
-  // );
-
   ReactDOM.render(<DynamicRoot relay={relay}></DynamicRoot>, domElement);
 };

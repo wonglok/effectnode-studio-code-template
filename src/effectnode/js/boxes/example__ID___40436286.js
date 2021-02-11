@@ -12,15 +12,9 @@ BoxScripts[box.moduleName].box({
 */
 
 // import ReactDOM from "react-dom";
-import React, { useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { Canvas, useThree } from "react-three-fiber";
-import {
-  Color,
-  Group,
-  PMREMGenerator,
-  sRGBEncoding,
-  UnsignedByteType,
-} from "three";
+import { Color, PMREMGenerator, sRGBEncoding, UnsignedByteType } from "three";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import { OrbitControls } from "@react-three/drei";
 // import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -53,26 +47,43 @@ function Background({ onUserData }) {
   return <group></group>;
 }
 
-function EffectNode({ relay }) {
-  let group = useMemo(() => {
-    return new Group();
-  }, []);
+function EffectNode({ tools, ...props }) {
+  let [element, mountElement] = useState([]);
 
   useEffect(() => {
-    relay.pulse({
-      type: "add",
-      group: group,
+    tools.pulse({
+      type: "mount",
+      done: (newItem) => {
+        mountElement((s) => {
+          return [...s, newItem];
+        });
+      },
     });
+  }, []);
 
-    return () => {
-      relay.pulse({
-        type: "remove",
-        group: group,
-      });
-    };
-  }, [group.uuid]);
+  return <group {...props}>{element}</group>;
+}
 
-  return <primitive object={group}></primitive>;
+function Page({ relay }) {
+  return (
+    <Canvas
+      colorManagement={true}
+      pixelRatio={window.devicePixelRatio || 1.0}
+      camera={{ position: [0, 0, -50] }}
+      onCreated={({ gl }) => {
+        gl.outputEncoding = sRGBEncoding;
+      }}
+    >
+      <Background onUserData={relay.onUserData}></Background>
+      <EffectNode
+        scale={[1, 1, 1]}
+        position={[0, 0, 0]}
+        tools={relay}
+      ></EffectNode>
+      <OrbitControls />
+      <ambientLight intensity={1.0} />
+    </Canvas>
+  );
 }
 
 export const box = (relay) => {
@@ -80,26 +91,9 @@ export const box = (relay) => {
   relay.stream(0, ({ type, done }) => {
     if (type === "mount") {
       done({
-        path: "/",
-        page: () => (
-          <Canvas
-            colorManagement={true}
-            pixelRatio={window.devicePixelRatio || 1.0}
-            camera={{ position: [0, 0, -50] }}
-            onCreated={({ gl }) => {
-              gl.outputEncoding = sRGBEncoding;
-            }}
-          >
-            <Background onUserData={relay.onUserData}></Background>
-            <EffectNode relay={relay}></EffectNode>
-            <OrbitControls />
-            <ambientLight intensity={1.0} />
-          </Canvas>
-        ),
+        path: "/example",
+        page: () => <Page relay={relay}></Page>,
       });
-      /*
-
-        */
     }
   });
 };

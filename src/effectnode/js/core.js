@@ -52,6 +52,7 @@ const onReadyState = (cb) => {
 };
 
 function MyCore({ mounter }) {
+  let onlineMap = new Map();
   let globalsMap = new Map();
   let resources = {
     get: (name) => {
@@ -101,10 +102,15 @@ function MyCore({ mounter }) {
     let pulse = (data) => {
       let outCables = cables.filter((c) => c.outputBoxID === box._id);
       outCables.forEach((cable) => {
-        // eventBus.emit(cable.inputSlotID, data);
-        window.dispatchEvent(
-          new CustomEvent(cable.inputSlotID, { detail: data })
-        );
+        let tt = 0;
+        tt = setInterval(() => {
+          if (onlineMap.has(cable.inputBoxID) && onlineMap.has(box._id)) {
+            clearInterval(tt);
+            window.dispatchEvent(
+              new CustomEvent(cable.inputSlotID, { detail: data })
+            );
+          }
+        });
       });
     };
 
@@ -146,6 +152,7 @@ function MyCore({ mounter }) {
         },
         graph: lowdb,
       });
+      onlineMap.set(box._id, true);
     }
   };
 
@@ -186,7 +193,7 @@ export async function main({ mounter }) {
       if (window.StreamInput) {
         window.StreamInput(state);
       }
-      console.log("receive-state");
+      // console.log("receive-state");
     });
 
     socket.on("reload-page", () => {
@@ -207,13 +214,13 @@ export async function main({ mounter }) {
         <a style="text-align: center; display: inline-block; width: 100%; font-size: 20px; text-decoration: underline; color: #238823;" href="${window.location.href}">Click here to try again</a>
       </div>
     `;
-    loading.style.cssText = `transition: opacity 1.5s; position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: flex; justify-content:center; align-items: center; font-size: 30px; z-index: 1000000; background: white;`;
+    loading.style.cssText = `transition: opacity 0s; position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: flex; justify-content:center; align-items: center; font-size: 30px; z-index: 1000000; background: white;`;
     document.body.appendChild(loading);
     onReadyState(() => {
-      loading.style.cssText = `transition: opacity 1.5s; opacity: 0; position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: flex; justify-content:center; align-items: center; font-size: 30px; z-index: 1000000; background: white;`;
+      loading.style.cssText = `transition: opacity 0s; opacity: 0; position: absolute; top: 0px; left: 0px; bottom: 0px; right: 0px; display: flex; justify-content:center; align-items: center; font-size: 30px; z-index: 1000000; background: white;`;
       setTimeout(() => {
         loading.remove();
-      }, 1500);
+      }, 0 * 1000);
     });
   }
 

@@ -68,7 +68,7 @@ export const box = (relay) => {
     if (type === "mount") {
       done({
         path: "/about",
-        react: (
+        page: () => (
           <Canvas
             colorManagement={true}
             pixelRatio={window.devicePixelRatio || 1.0}

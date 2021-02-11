@@ -24,12 +24,23 @@ function DynamicRoot({ relay }) {
       done: (v) => {
         addRoutes((s) => {
           if (v) {
+            console.log(v.path);
             return [
               ...s,
-              <Route key={`_route_` + Math.random()} path={v.path}>
-                {v.react}
+              <Route key={`_route_` + v.path} path={v.path}>
+                <v.page></v.page>
               </Route>,
-            ];
+            ]
+              .slice()
+              .sort((a, b) => {
+                if (a.key >= b.key) {
+                  return -1;
+                } else if (b.key < a.key) {
+                  return 1;
+                } else {
+                  return 0;
+                }
+              });
           } else {
             return [...s];
           }

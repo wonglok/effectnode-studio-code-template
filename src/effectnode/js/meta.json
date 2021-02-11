@@ -431,8 +431,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_84600513",
-			"x": -675.6678771972656,
-			"y": 492.529541015625,
+			"x": -616.8820495605469,
+			"y": 460.5345458984375,
 			"displayName": "noodle-geometry",
 			"moduleName": "noodlegeometry__ID___84600513",
 			"fileName": "noodlegeometry__ID___84600513.js",
@@ -458,8 +458,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_3318298",
-			"x": -297.1285095214844,
-			"y": 742.48193359375,
+			"x": -320.3035583496094,
+			"y": 719.669677734375,
 			"displayName": "noodle",
 			"moduleName": "noodle__ID___3318298",
 			"fileName": "noodle__ID___3318298.js",
@@ -485,8 +485,8 @@
 			"isProtected": false,
 			"isUserBoxes": true,
 			"_id": "_59043174",
-			"x": -442.45697021484375,
-			"y": 467.76373291015625,
+			"x": -406.66888427734375,
+			"y": 465.1015625,
 			"displayName": "noodle-material",
 			"moduleName": "noodlematerial__ID___59043174",
 			"fileName": "noodlematerial__ID___59043174.js",
@@ -637,18 +637,6 @@
 			"inputSlotID": "_9476964"
 		},
 		{
-			"_id": "_64780241",
-			"outputBoxID": "_78620870",
-			"inputBoxID": "_59043174",
-			"inputSlotID": "_22596519"
-		},
-		{
-			"_id": "_78873343",
-			"outputBoxID": "_78620870",
-			"inputBoxID": "_84600513",
-			"inputSlotID": "_34316030"
-		},
-		{
 			"_id": "_77889808",
 			"outputBoxID": "_59043174",
 			"inputBoxID": "_3318298",
@@ -659,6 +647,18 @@
 			"outputBoxID": "_84600513",
 			"inputBoxID": "_3318298",
 			"inputSlotID": "_43201965"
+		},
+		{
+			"_id": "_86933373",
+			"outputBoxID": "_78620870",
+			"inputBoxID": "_84600513",
+			"inputSlotID": "_71213795"
+		},
+		{
+			"_id": "_73634655",
+			"outputBoxID": "_78620870",
+			"inputBoxID": "_59043174",
+			"inputSlotID": "_79221455"
 		}
 	]
 }
